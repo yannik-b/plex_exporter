@@ -99,15 +99,16 @@ func (c *PlexClient) GetServerMetrics() map[string]ServerMetric {
 			if err != nil {
 				logger.Debugf("Could not convert sections ID to int. (%s)", section.ID)
 			}
-			size, err := server.GetSectionSize(id)
+			size, leafs, err := server.GetSectionSize(id)
 			if err != nil {
 				logger.Debugf("Could not get section size for \"%s\": %s", section.Name, err)
 				continue
 			}
 			libraryMetric := LibraryMetric{
-				Name: section.Name,
-				Type: section.Type,
-				Size: size,
+				Name:      section.Name,
+				Type:      section.Type,
+				Size:      size,
+				LeafCount: leafs,
 			}
 
 			serverMetric.Libraries = append(serverMetric.Libraries, libraryMetric)

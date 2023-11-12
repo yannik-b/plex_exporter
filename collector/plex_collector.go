@@ -7,11 +7,12 @@ import (
 )
 
 type PlexCollector struct {
-	Logger         *log.Entry
-	client         *plex.PlexClient
-	serverInfo     *prometheus.Desc
-	sessionsMetric *prometheus.Desc
-	libraryMetric  *prometheus.Desc
+	Logger            *log.Entry
+	client            *plex.PlexClient
+	serverInfo        *prometheus.Desc
+	sessionsMetric    *prometheus.Desc
+	libraryMetric     *prometheus.Desc
+	libraryLeafMetric *prometheus.Desc
 }
 
 func NewPlexCollector(c *plex.PlexClient, l *log.Entry) *PlexCollector {
@@ -28,6 +29,10 @@ func NewPlexCollector(c *plex.PlexClient, l *log.Entry) *PlexCollector {
 		),
 		libraryMetric: prometheus.NewDesc("plex_library_section_size_count",
 			"Number of items in a library section",
+			[]string{"server_name", "server_id", "name", "type"}, nil,
+		),
+		libraryLeafMetric: prometheus.NewDesc("plex_library_section_leaf_count",
+			"Number of leafs in a library section",
 			[]string{"server_name", "server_id", "name", "type"}, nil,
 		),
 	}
@@ -49,6 +54,7 @@ func (c *PlexCollector) Collect(ch chan<- prometheus.Metric) {
 
 		for _, l := range v.Libraries {
 			ch <- prometheus.MustNewConstMetric(c.libraryMetric, prometheus.GaugeValue, float64(l.Size), v.Name, v.ID, l.Name, l.Type)
+			ch <- prometheus.MustNewConstMetric(c.libraryLeafMetric, prometheus.GaugeValue, float64(l.LeafCount), v.Name, v.ID, l.Name, l.Type)
 		}
 	}
 }

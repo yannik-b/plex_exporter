@@ -35,18 +35,18 @@ jobs:
         run: |
           VERSION=$(git describe --dirty --always)
           cat <<EOF > plex_exporter_manifest.yml
-          image: granra/plex_exporter:${VERSION}
+          image: yannikb/plex_exporter:${VERSION}
           tags: [ 'latest' ]
           manifests:
-          - image: granra/plex_exporter:amd64
+          - image: yannikb/plex_exporter:amd64
             platform:
               architecture: amd64
               os: linux
-          - image: granra/plex_exporter:arm
+          - image: yannikb/plex_exporter:arm
             platform:
               architecture: arm
               os: linux
-          - image: granra/plex_exporter:arm64
+          - image: yannikb/plex_exporter:arm64
             platform:
               architecture: arm64
               os: linux

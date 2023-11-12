@@ -9,7 +9,6 @@ import (
 
 	"github.com/arnarg/plex_exporter/config"
 	"github.com/arnarg/plex_exporter/plex/api"
-	"github.com/imdario/mergo"
 )
 
 type Server struct {
@@ -104,28 +103,28 @@ func (s *Server) GetLibrary() (*api.LibraryResponse, error) {
 	return &libraryResponse, nil
 }
 
-func (s *Server) GetSectionSize(id int) (int, error) {
-	// We don't want to get every item in the library section
-	// these headers make sure we only get metadata
-	eh := map[string]string{
-		"X-Plex-Container-Start": "0",
-		"X-Plex-Container-Size":  "0",
-	}
-	mergo.Merge(&eh, headers)
-
+func (s *Server) GetSectionSize(id int) (int, int, error) {
 	sectionResponse := api.SectionResponse{}
 
-	_, body, err := sendRequest("GET", fmt.Sprintf(SectionURI, s.BaseURL, id), eh, s.httpClient)
+	_, body, err := sendRequest("GET", fmt.Sprintf(SectionURI, s.BaseURL, id), headers, s.httpClient)
 	if err != nil {
-		return -1, err
+		return -1, -1, err
 	}
 
 	err = json.Unmarshal(body, &sectionResponse)
 	if err != nil {
-		return -1, err
+		return -1, -1, err
 	}
 
-	return sectionResponse.TotalSize, nil
+	var leafSum = 0
+	var childSum = 0
+
+	for _, child := range sectionResponse.Children {
+		leafSum = leafSum + child.LeafCount
+		childSum = childSum + 1
+	}
+
+	return childSum, leafSum, nil
 }
 
 func (s *Server) get(url string) ([]byte, error) {

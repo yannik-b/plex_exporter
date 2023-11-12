@@ -20,5 +20,9 @@ type SectionResponse struct {
 }
 
 type SectionDetail struct {
-	TotalSize int `json:"totalSize"`
+	Children []Metadata `json:"Metadata"`
+}
+
+type Metadata struct {
+	LeafCount int `json:"leafCount"`
 }

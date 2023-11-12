@@ -10,7 +10,8 @@ type ServerMetric struct {
 }
 
 type LibraryMetric struct {
-	Name string
-	Type string
-	Size int
+	Name      string
+	Type      string
+	Size      int
+	LeafCount int
 }
