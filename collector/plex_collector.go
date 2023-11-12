@@ -54,7 +54,9 @@ func (c *PlexCollector) Collect(ch chan<- prometheus.Metric) {
 
 		for _, l := range v.Libraries {
 			ch <- prometheus.MustNewConstMetric(c.libraryMetric, prometheus.GaugeValue, float64(l.Size), v.Name, v.ID, l.Name, l.Type)
-			ch <- prometheus.MustNewConstMetric(c.libraryLeafMetric, prometheus.GaugeValue, float64(l.LeafCount), v.Name, v.ID, l.Name, l.Type)
+			if l.Type == "show" {
+				ch <- prometheus.MustNewConstMetric(c.libraryLeafMetric, prometheus.GaugeValue, float64(l.LeafCount), v.Name, v.ID, l.Name, l.Type)
+			}
 		}
 	}
 }
