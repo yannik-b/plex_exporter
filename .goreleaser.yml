@@ -2,7 +2,7 @@ builds:
 - env:
   - CGO_ENABLED=0
   ldflags:
-  - -s -w -X github.com/arnarg/plex_exporter/version.Version={{.Version}}
+  - -s -w -X github.com/yannik-b/plex_exporter/version.Version={{.Version}}
   goos:
   - linux
   - darwin
@@ -29,7 +29,7 @@ dockers:
   ids:
   - plex_exporter
   image_templates:
-  - granra/plex_exporter:amd64
+  - yannikb/plex_exporter:amd64
   skip_push: false
   dockerfile: docker/Dockerfile.release
 
@@ -39,7 +39,7 @@ dockers:
   ids:
   - plex_exporter
   image_templates:
-  - granra/plex_exporter:arm
+  - yannikb/plex_exporter:arm
   skip_push: false
   dockerfile: docker/Dockerfile.release
 
@@ -48,7 +48,7 @@ dockers:
   ids:
   - plex_exporter
   image_templates:
-  - granra/plex_exporter:arm64
+  - yannikb/plex_exporter:arm64
   skip_push: false
   dockerfile: docker/Dockerfile.release
 
